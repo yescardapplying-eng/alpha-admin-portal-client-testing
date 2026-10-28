@@ -82,3 +82,38 @@ function getAdminDB() {
         throw new Exception("Admin DB Connection Failed: " . $e->getMessage());
     }
 }
+
+/**
+ * ============================================================================
+ * TABLE NAME RESOLUTION HELPERS FOR ADMIN PORTAL (DYNAMIC / CONFIGURABLE)
+ * ============================================================================
+ */
+function getAdminTableName($type = 'leads') {
+    loadAdminEnv();
+    switch ($type) {
+        case 'interactions':
+        case 'assessment_interactions':
+            $t = getenv('DB_TABLE_INTERACTIONS') ?: 'test_assessment_interactions';
+            break;
+        case 'admin_users':
+        case 'users':
+            $t = getenv('DB_TABLE_ADMIN_USERS') ?: 'test_admin_users';
+            break;
+        case 'leads':
+        default:
+            $t = getenv('DB_TABLE_LEADS') ?: 'test_leads';
+            break;
+    }
+    return preg_replace('/[^a-zA-Z0-9_]/', '', $t);
+}
+
+if (!defined('ADMIN_TABLE_LEADS')) {
+    define('ADMIN_TABLE_LEADS', getAdminTableName('leads'));
+}
+if (!defined('ADMIN_TABLE_INTERACTIONS')) {
+    define('ADMIN_TABLE_INTERACTIONS', getAdminTableName('interactions'));
+}
+if (!defined('ADMIN_TABLE_USERS')) {
+    define('ADMIN_TABLE_USERS', getAdminTableName('admin_users'));
+}
+

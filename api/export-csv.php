@@ -48,6 +48,7 @@ try {
     }
 
     $whereSql = implode(' AND ', $where);
+    $leadsTable = ADMIN_TABLE_LEADS;
 
     $sql = "
         SELECT 
@@ -56,7 +57,7 @@ try {
             challenge, trading_segment, trading_capital,
             utm_source, utm_medium, utm_campaign,
             ip_address, created_at, completed_at
-        FROM leads
+        FROM `{$leadsTable}`
         WHERE {$whereSql}
         ORDER BY created_at DESC
     ";

@@ -25,7 +25,8 @@ if (empty($username) || empty($password)) {
 
 try {
     $pdo = getAdminDB();
-    $stmt = $pdo->prepare("SELECT id, username, password_hash, role FROM admin_users WHERE username = ? LIMIT 1");
+    $usersTable = ADMIN_TABLE_USERS;
+    $stmt = $pdo->prepare("SELECT id, username, password_hash, role FROM `{$usersTable}` WHERE username = ? LIMIT 1");
     $stmt->execute([$username]);
     $admin = $stmt->fetch();
 
@@ -34,7 +35,7 @@ try {
     }
 
     // Update last login timestamp
-    $up = $pdo->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
+    $up = $pdo->prepare("UPDATE `{$usersTable}` SET last_login = NOW() WHERE id = ?");
     $up->execute([$admin['id']]);
 
     // Establish secure session

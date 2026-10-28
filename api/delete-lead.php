@@ -28,13 +28,15 @@ if ($id <= 0 && empty($sessionId)) {
 
 try {
     $pdo = getAdminDB();
+    $leadsTable = ADMIN_TABLE_LEADS;
+    $interactionsTable = ADMIN_TABLE_INTERACTIONS;
 
     // 1. Find the target lead
     if ($id > 0) {
-        $stmt = $pdo->prepare("SELECT id, session_id, lead_reference, full_name FROM leads WHERE id = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, session_id, lead_reference, full_name FROM `{$leadsTable}` WHERE id = ? LIMIT 1");
         $stmt->execute([$id]);
     } else {
-        $stmt = $pdo->prepare("SELECT id, session_id, lead_reference, full_name FROM leads WHERE session_id = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, session_id, lead_reference, full_name FROM `{$leadsTable}` WHERE session_id = ? LIMIT 1");
         $stmt->execute([$sessionId]);
     }
     $lead = $stmt->fetch();
@@ -47,12 +49,12 @@ try {
     $leadRef = $lead['lead_reference'];
 
     // 2. Delete related clicks/interactions
-    $delInt = $pdo->prepare("DELETE FROM assessment_interactions WHERE session_id = ?");
+    $delInt = $pdo->prepare("DELETE FROM `{$interactionsTable}` WHERE session_id = ?");
     $delInt->execute([$targetSessionId]);
     $deletedInteractions = $delInt->rowCount();
 
     // 3. Delete lead record
-    $delLead = $pdo->prepare("DELETE FROM leads WHERE id = ?");
+    $delLead = $pdo->prepare("DELETE FROM `{$leadsTable}` WHERE id = ?");
     $delLead->execute([$lead['id']]);
 
     sendJson(200, [

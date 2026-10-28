@@ -69,9 +69,10 @@ try {
     }
 
     $whereSql = implode(' AND ', $where);
+    $leadsTable = ADMIN_TABLE_LEADS;
 
     // 3. Count Total Matching Records
-    $countSql = "SELECT COUNT(*) as total FROM leads WHERE {$whereSql}";
+    $countSql = "SELECT COUNT(*) as total FROM `{$leadsTable}` WHERE {$whereSql}";
     $countStmt = $pdo->prepare($countSql);
     $countStmt->execute($params);
     $totalItems = (int)$countStmt->fetchColumn();
@@ -89,7 +90,7 @@ try {
             whatsapp_number, state,
             utm_source, utm_medium, utm_campaign,
             created_at, updated_at, completed_at
-        FROM leads
+        FROM `{$leadsTable}`
         WHERE {$whereSql}
         ORDER BY created_at {$sort}
         LIMIT :limit OFFSET :offset
@@ -111,7 +112,7 @@ try {
             SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as total_completed,
             SUM(CASE WHEN status = 'partial' THEN 1 ELSE 0 END) as total_partial,
             SUM(CASE WHEN DATE(created_at) = CURRENT_DATE() THEN 1 ELSE 0 END) as total_today
-        FROM leads
+        FROM `{$leadsTable}`
     ");
     $summary = $summaryStmt->fetch() ?: [
         'total_all' => 0,

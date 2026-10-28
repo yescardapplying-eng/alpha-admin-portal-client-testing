@@ -20,12 +20,14 @@ if ($id <= 0 && empty($sessionId)) {
 
 try {
     $pdo = getAdminDB();
+    $leadsTable = ADMIN_TABLE_LEADS;
+    $interactionsTable = ADMIN_TABLE_INTERACTIONS;
 
     if ($id > 0) {
-        $stmt = $pdo->prepare("SELECT * FROM leads WHERE id = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT * FROM `{$leadsTable}` WHERE id = ? LIMIT 1");
         $stmt->execute([$id]);
     } else {
-        $stmt = $pdo->prepare("SELECT * FROM leads WHERE session_id = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT * FROM `{$leadsTable}` WHERE session_id = ? LIMIT 1");
         $stmt->execute([$sessionId]);
     }
     $lead = $stmt->fetch();
@@ -37,7 +39,7 @@ try {
     // Retrieve interaction click history
     $intStmt = $pdo->prepare("
         SELECT id, step_number, question, selected_answer, field_name, action_type, ip_address, created_at
-        FROM assessment_interactions
+        FROM `{$interactionsTable}`
         WHERE session_id = ?
         ORDER BY id ASC
     ");
