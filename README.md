@@ -9,7 +9,7 @@ A dedicated, secure, and standalone administrative portal for managing incoming 
 1. **Secure Admin Authentication**:
    - Session-based authentication with bcrypt-hashed passwords.
    - Guarded routes (unauthorized users are immediately redirected to `/login.html`).
-   - Default credentials: `admin` / `Stock@2026#Trading` (configurable in `.env`).
+   - Default credentials: `admin` / `Stock@2026#Test` (configurable in `.env`).
 2. **Date-wise Leads Directory**:
    - All leads are automatically sorted by creation timestamp (`ORDER BY created_at DESC`).
 3. **100 Leads Per Page Pagination**:
@@ -86,4 +86,4 @@ php -S 127.0.0.1:8080 router.php
 Open **`http://localhost:8080`** in your browser.
 
 * **Username**: `admin`
-* **Password**: `Stock@2026#Trading`
+* **Password**: `Stock@2026#Test`
